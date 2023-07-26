@@ -1,6 +1,6 @@
 "use client";
 
-import CustomModal from "./components/CustomModal";
+import CustomModal from "@/CustomModal";
 import { useState } from "react";
 
 export default function Home() {

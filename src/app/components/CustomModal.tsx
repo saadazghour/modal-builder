@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import Modal from "react-modal";
-import IconImage from "./IconImage";
+import IconImage from "@/IconImage";
 import { ErrorMessage, Field, Formik } from "formik";
 
 interface CustomModalProps {
@@ -129,6 +129,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
                 className="py-1 text-sm italic font-semibold text-red-500"
               />
             </div>
+
             <div className="block py-2">
               <label className="text-sm font-semibold text-gray-500">
                 How we can help?
@@ -186,6 +187,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
                 className="py-1 text-sm italic font-semibold text-red-500 "
               />
             </div>
+
             <div className="flex justify-end mt-4 space-x-4 text-sm font-medium text-gray-600 cursor-pointer hover:text-gray-700">
               <button
                 onClick={onRequestClose}
