@@ -70,20 +70,16 @@ const CustomModal: React.FC<CustomModalProps> = ({
           return errors;
         }}
         onSubmit={(values, { setSubmitting }) => {
-          console.log("onSubmit DONE!!", values);
-
           setTimeout(() => {
-            // alert(JSON.stringify(values, null, 2));
-            // setSubmitting(false);
+            const result = { ...values };
+            // console.log(result); // The is the result object for the form.
+            setSubmitting(false);
           }, 400);
         }}
       >
         {({
           values,
-          errors,
-          touched,
           handleChange,
-          handleBlur,
           handleSubmit,
           isSubmitting,
           setFieldValue,
@@ -198,6 +194,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
               </button>
               <button
                 type="submit"
+                disabled={isSubmitting}
                 className="px-4 py-2 mt-4 font-medium text-white bg-indigo-400 rounded-md "
               >
                 Send
