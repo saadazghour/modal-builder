@@ -27,6 +27,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
 
   return (
     <Modal
+      ariaHideApp={false}
       isOpen={isOpen}
       onRequestClose={onRequestClose}
       contentLabel={contentLabel}
