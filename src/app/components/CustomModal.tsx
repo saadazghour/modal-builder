@@ -116,13 +116,15 @@ const CustomModal: React.FC<CustomModalProps> = ({
               <label className="py-2 text-sm font-semibold text-gray-500">
                 Subject
               </label>
-              <input
+
+              <Field
                 type="text"
                 name="subject"
                 onChange={handleChange}
                 value={values.subject}
                 className="w-full px-4 py-2 border border-gray-300 rounded"
               />
+
               <ErrorMessage
                 name="subject"
                 component="div"
@@ -134,7 +136,8 @@ const CustomModal: React.FC<CustomModalProps> = ({
               <label className="text-sm font-semibold text-gray-500">
                 How we can help?
               </label>
-              <textarea
+              <Field
+                as="textarea"
                 name="helps"
                 onChange={handleChange}
                 value={values.helps}
