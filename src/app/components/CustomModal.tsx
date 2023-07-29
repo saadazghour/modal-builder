@@ -2,6 +2,7 @@ import React, { useRef } from "react";
 import Modal from "react-modal";
 import IconImage from "@/IconImage";
 import { ErrorMessage, Field, Formik } from "formik";
+import * as Yup from "yup";
 
 interface CustomModalProps {
   isOpen: boolean;
@@ -26,65 +27,56 @@ const CustomModal: React.FC<CustomModalProps> = ({
   };
 
   return (
-    <Modal
-      ariaHideApp={false}
-      isOpen={isOpen}
-      onRequestClose={onRequestClose}
-      contentLabel={contentLabel}
+    <Formik
+      initialValues={{
+        requestType: "",
+        subject: "",
+        helps: "",
+        file: null as File | null,
+      }}
+      // In summary, Yup is responsible for the schema-based validation, while Formik handles form management and state. Combining Yup with Formik provides a robust solution for building forms with client-side validation.
+
+      validationSchema={Yup.object({
+        requestType: Yup.string().required("Required"),
+        subject: Yup.string()
+          .required("Required")
+          .min(3, "Must be at least 3 characters"),
+        helps: Yup.string()
+          .required("Required")
+          .min(6, "Must be at least 6 characters"),
+        file: Yup.mixed()
+          .required("Required")
+          .test("fileSize", "File size is too large", (value) => {
+            return value instanceof File && value.size <= 1000000;
+          }),
+      })}
+      onSubmit={(values, { setSubmitting }) => {
+        setTimeout(() => {
+          const result = { ...values };
+          // console.log(result); // The is the result object for the form.
+          setSubmitting(false);
+        }, 400);
+      }}
+      enableReinitialize={true} // Enable reinitialization of initial values
     >
-      <p className="w-full pb-8 text-sm text-gray-800 fon">
-        Our Support Team is ready to help!
-      </p>
+      {({
+        values,
+        setFieldValue,
+        handleChange,
+        handleReset,
+        handleSubmit,
+        isSubmitting,
+      }) => (
+        <Modal
+          ariaHideApp={false}
+          isOpen={isOpen}
+          onRequestClose={onRequestClose}
+          contentLabel={contentLabel}
+        >
+          <p className="w-full pb-8 text-sm text-gray-800 fon">
+            Our Support Team is ready to help!
+          </p>
 
-      <Formik
-        initialValues={{
-          requestType: "",
-          subject: "",
-          helps: "",
-          file: null as File | null,
-        }}
-        validate={({ subject, helps, requestType, file }) => {
-          const errors: any = {};
-
-          if (!requestType) {
-            errors.requestType = "Required";
-          }
-
-          if (!file) {
-            errors.file = "Required";
-          } else if (file.size > 1000000) {
-            errors.file = "File size is too large";
-          }
-
-          if (!subject) {
-            errors.subject = "Required";
-          } else if (subject.length < 3) {
-            errors.subject = "Must be at least 3 characters";
-          }
-
-          if (!helps) {
-            errors.helps = "Required";
-          } else if (helps.length < 6) {
-            errors.helps = "Must be at least 6 characters";
-          }
-
-          return errors;
-        }}
-        onSubmit={(values, { setSubmitting }) => {
-          setTimeout(() => {
-            const result = { ...values };
-            // console.log(result); // The is the result object for the form.
-            setSubmitting(false);
-          }, 400);
-        }}
-      >
-        {({
-          values,
-          handleChange,
-          handleSubmit,
-          isSubmitting,
-          setFieldValue,
-        }) => (
           <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
             <div className="block py-2">
               <label className="text-sm font-semibold text-gray-500 ">
@@ -120,6 +112,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
               <Field
                 type="text"
                 name="subject"
+                placeholder="Subject"
                 onChange={handleChange}
                 value={values.subject}
                 className="w-full px-4 py-2 border border-gray-300 rounded"
@@ -139,6 +132,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
               <Field
                 as="textarea"
                 name="helps"
+                placeholder="How we can help?"
                 onChange={handleChange}
                 value={values.helps}
                 className="w-full px-4 py-2 border border-gray-300 rounded"
@@ -193,7 +187,10 @@ const CustomModal: React.FC<CustomModalProps> = ({
 
             <div className="flex justify-end mt-4 space-x-4 text-sm font-medium text-gray-600 cursor-pointer hover:text-gray-700">
               <button
-                onClick={onRequestClose}
+                onClick={() => {
+                  handleReset();
+                  onRequestClose();
+                }}
                 className="mt-4 font-semibold text-gray-500 hover:text-gray-600"
               >
                 Cancel
@@ -207,9 +204,9 @@ const CustomModal: React.FC<CustomModalProps> = ({
               </button>
             </div>
           </form>
-        )}
-      </Formik>
-    </Modal>
+        </Modal>
+      )}
+    </Formik>
   );
 };
 
