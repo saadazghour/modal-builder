@@ -47,6 +47,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
         file: Yup.mixed()
           .required("Required")
           .test("fileSize", "File size is too large", (value) => {
+            // Size less than or equal to 1,000,000 bytes (1MB).
             return value instanceof File && value.size <= 1000000;
           }),
       })}
